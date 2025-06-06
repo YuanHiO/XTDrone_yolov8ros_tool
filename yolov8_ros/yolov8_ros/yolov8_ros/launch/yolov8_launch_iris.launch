@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+  <!-- Console launch prefix -->
+  <arg name="launch_prefix" default=""/>
+  <arg name="image" default="/typhoon_h480_0/cgo3_camera/image_raw" />
+
+  <!-- Config and weights folder. -->
+  <arg name="yolo_weights_path"     default="$(find yolov8_ros)/weights"/>
+
+  <!-- Start YOLOv8 ROS node -->
+  <node pkg="yolov8_ros" type="yolo_v8.py" name="darknet_ros" output="screen"
+        launch-prefix="$(arg launch_prefix)">
+    <param name="weight_path"       value="$(arg yolo_weights_path)/yolov8s.pt"/>
+    <param name="image_topic"       value="$(arg image)" />
+    <param name="pub_topic"         value="/yolov8/bounding_boxes" />
+    <param name="camera_frame"      value="camera_color_frame"/>
+    <param name="visualize"         value="true"/>
+    <param name="conf"              value="0.3" />
+    <param name="use_cpu"           value="false"/> <!-- 根据你的环境设置 -->
+  </node>
+
+  <!-- Optional: Republish if needed -->
+  <!-- <node name="republish" type="republish" pkg="image_transport" output="screen"
+          args="compressed in:=/front_camera/image_raw raw out:=/camera/image_raw" /> -->
+</launch>
